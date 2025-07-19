@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: color-deploy
+  name: demo-app1
 spec:
   selector:
     matchLabels:
       app: color
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
