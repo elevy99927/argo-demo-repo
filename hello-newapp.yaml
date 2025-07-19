@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: color
-        image: elevy99927/color:red
+        image: elevy99927/color:green
         ports:
         - containerPort: 80
