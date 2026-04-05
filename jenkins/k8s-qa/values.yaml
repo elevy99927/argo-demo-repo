@@ -5,7 +5,9 @@ controller:
     enabled: true
     # Define external configuration URLs (Git, HTTP)
     configUrls:
-      - https://raw.githubusercontent.com/username/repo/main/jenkins-casc.yaml
+      - https://raw.githubusercontent.com/elevy99927/Jenkins-k8s/refs/heads/main/Part4-CICD/04-Jenkins/casc/jenkins-casc.yaml
+      #- https://raw.githubusercontent.com/username/repo/main/jenkins-casc.yaml
+      
 
   admin:
     # -- Admin username created as a secret if `controller.admin.createSecret` is true
