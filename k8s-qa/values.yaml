@@ -1,0 +1,16 @@
+####################################################################
+
+controller:
+  JCasC:
+    enabled: true
+    # Define external configuration URLs (Git, HTTP)
+    configUrls:
+      - https://raw.githubusercontent.com/username/repo/main/jenkins-casc.yaml
+
+  admin:
+    # -- Admin username created as a secret if `controller.admin.createSecret` is true
+    username: "admin"
+    # -- Admin password created as a secret if `controller.admin.createSecret` is true
+    # @default -- <random password>
+    password: "Aa123456"
+    jenkinsAdminEmail: "eyal@levys.co.il"
