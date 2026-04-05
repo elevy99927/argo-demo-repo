@@ -20,6 +20,16 @@ controller:
 
   JCasC:
     configScripts:
+      credentials: |
+        credentials:
+          system:
+            domainCredentials:
+              - credentials:
+                  - string:
+                      scope: GLOBAL
+                      id: "github-token"
+                      secret: "${GITHUB_TOKEN}"
+                      description: "GitHub PAT"
       jobs: |
         jobs:
           - script: >
