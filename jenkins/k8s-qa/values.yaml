@@ -33,7 +33,7 @@ controller:
                         remote {
                           url('https://github.com/elevy99927/hello-newapp.git')
                         }
-                        branches('*/lab4-solution')
+                        branches('*/argo-solution')
                       }
                     }
                     scriptPath('Jenkinsfile')
