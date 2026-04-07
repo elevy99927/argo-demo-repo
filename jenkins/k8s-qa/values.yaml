@@ -32,9 +32,7 @@ controller:
       team-1-jobs: |
         jobs:
           - script: >
-              folder('team-2')
-          - script: >
-              pipelineJob('hello-newapp') {
+              pipelineJob('team-1/hello-newapp') {
                 triggers {
                   scm('* * * * *')
                 }
