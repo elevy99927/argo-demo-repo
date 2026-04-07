@@ -1,9 +1,13 @@
+##################################################################
+## Jenkins values.yaml Demo!!
+## the real values is located in the argocd repo
+## https://github.com/elevy99927/argo-demo-repo/tree/application
+####################################################################
 controller:
   admin:
     # -- Admin username created as a secret if `controller.admin.createSecret` is true
     username: "admin"
     # -- Admin password created as a secret if `controller.admin.createSecret` is true
-    # @default -- <random password>
     password: "Aa123456"
     jenkinsAdminEmail: "eyal@levys.co.il"
 
@@ -14,24 +18,37 @@ controller:
     - kubernetes:latest
     - workflow-aggregator:latest
     - git:latest
-    - pipeline-stage-view:latest
     - configuration-as-code:latest
     - job-dsl:latest
 
-  sidecars:
-    configAutoReload:
-      enabled: true
   JCasC:
-    configUrls: []
-    configScripts: {}
-
-  extraVolumes:
-    - name: casc-jobs
-      configMap:
-        name: jenkins-casc-jobs
-
-  extraVolumeMounts:
-    - name: casc-jobs
-      mountPath: /var/jenkins_home/casc_config/jobs.yaml
-      subPath: jobs.yaml
-
+    configScripts:
+      folders: |
+        jobs:
+          - script: >
+              folder('team-1')
+          - script: >
+              folder('team-2')
+      team-1-jobs: |
+        jobs:
+          - script: >
+              folder('team-2')
+          - script: >
+              pipelineJob('hello-newapp') {
+                triggers {
+                  scm('* * * * *')
+                }
+                definition {
+                  cpsScm {
+                    scm {
+                      git {
+                        remote {
+                          url('https://github.com/elevy99927/hello-newapp.git')
+                        }
+                        branches('*/argo-solution')
+                      }
+                    }
+                    scriptPath('Jenkinsfile')
+                  }
+                }
+              }
