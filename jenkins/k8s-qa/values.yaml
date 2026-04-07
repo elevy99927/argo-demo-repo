@@ -18,36 +18,20 @@ controller:
     - configuration-as-code:latest
     - job-dsl:latest
 
+  sidecars:
+    configAutoReload:
+      enabled: true
   JCasC:
-    configScripts:
-      credentials: |
-        credentials:
-          system:
-            domainCredentials:
-              - credentials:
-                  - string:
-                      scope: GLOBAL
-                      id: "github-token"
-                      secret: "${GITHUB_TOKEN}"
-                      description: "GitHub PAT"
-      jobs: |
-        jobs:
-          - script: >
-              pipelineJob('hello-newapp') {
-                triggers {
-                  scm('* * * * *')
-                }
-                definition {
-                  cpsScm {
-                    scm {
-                      git {
-                        remote {
-                          url('https://github.com/elevy99927/hello-newapp.git')
-                        }
-                        branches('*/argo-solution')
-                      }
-                    }
-                    scriptPath('Jenkinsfile')
-                  }
-                }
-              }
+    configUrls: []
+    configScripts: {}
+
+  extraVolumes:
+    - name: casc-jobs
+      configMap:
+        name: jenkins-casc-jobs
+
+  extraVolumeMounts:
+    - name: casc-jobs
+      mountPath: /var/jenkins_home/casc_config/jobs.yaml
+      subPath: jobs.yaml
+

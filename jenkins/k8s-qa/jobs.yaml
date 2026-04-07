@@ -1,0 +1,20 @@
+jobs:
+  - script: >
+      pipelineJob('hello-newapp') {
+        triggers {
+          scm('* * * * *')
+        }
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('https://github.com/elevy99927/hello-newapp.git')
+                }
+                branches('*/argo-solution')
+              }
+            }
+            scriptPath('Jenkinsfile')
+          }
+        }
+      }
