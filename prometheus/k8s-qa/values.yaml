@@ -1370,14 +1370,14 @@ grafana:
 
   # Administrator credentials when not using an existing secret (see below)
   adminUser: admin
-  # adminPassword: strongpassword
+  adminPassword: Aa123456
 
   # Use an existing secret for the admin user.
   admin:
     ## Name of the secret. Can be templated.
     existingSecret: ""
-    userKey: admin-user
-    passwordKey: admin-password
+    userKey: admin
+    passwordKey: Aa123456
 
   rbac:
     ## If true, Grafana PSPs will be created
