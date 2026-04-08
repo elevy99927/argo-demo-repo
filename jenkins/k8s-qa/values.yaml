@@ -51,3 +51,21 @@ controller:
                   }
                 }
               }
+      team-2-jobs: |
+        jobs:
+          - script: >
+              pipelineJob('team-2/k8s-deployer') {
+                definition {
+                  cpsScm {
+                    scm {
+                      git {
+                        remote {
+                          url('https://github.com/elevy99927/hello-newapp.git')
+                        }
+                        branches('*/k8s-deployer')
+                      }
+                    }
+                    scriptPath('Jenkinsfile')
+                  }
+                }
+              }
