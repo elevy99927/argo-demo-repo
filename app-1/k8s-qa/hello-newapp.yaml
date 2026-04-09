@@ -41,7 +41,7 @@ spec:
     spec:
       containers:
       - name: hello-newapp #from values
-        image: elevy99927/helloworld:5 #from values
+        image: elevy99927/helloworld:6 #from values
         ports:
         - containerPort: 8000
 ---
