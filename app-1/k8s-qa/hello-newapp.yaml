@@ -41,7 +41,7 @@ spec:
     spec:
       containers:
       - name: hello-newapp #from values
-        image: elevy99927/helloworld:2 #from values
+        image: elevy99927/helloworld:3 #from values
         ports:
         - containerPort: 8000
 ---
@@ -58,6 +58,6 @@ spec:
     matchLabels:
       app: hello-newapp
   endpoints:
-    - port: "8000"
+    - port: "80"
       interval: 30s
       path: /metrics
