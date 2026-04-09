@@ -69,3 +69,22 @@ controller:
                   }
                 }
               }
+
+          - script: >
+              pipelineJob('team-2/hello-newapp-advance') {
+                definition {
+                  cpsScm {
+                    scm {
+                      git {
+                        remote {
+                          url('https://github.com/elevy99927/hello-newapp.git')
+                        }
+                        branches('*/argo-advance')
+                      } 
+                    } 
+                    scriptPath('Jenkinsfile')
+                  }
+                }
+              }
+
+
