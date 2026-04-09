@@ -41,7 +41,7 @@ spec:
     spec:
       containers:
       - name: hello-newapp #from values
-        image: elevy99927/helloworld:3 #from values
+        image: elevy99927/helloworld:4 #from values
         ports:
         - containerPort: 8000
 ---
@@ -52,7 +52,7 @@ metadata:
   name: hello-newapp
   labels:
     app: monitoring
-    release: prometheus
+    release: kube-prometheus-stack
 spec:
   selector:
     matchLabels:
