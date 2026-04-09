@@ -1,0 +1,63 @@
+---
+# Source: spring-music/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello-newapp-cm
+data:
+  dbname: "DB_MYSQL"
+  dbtable: music
+  k8s: v1.31.0
+---
+# Source: spring-music/templates/service.yaml
+kind: Service     
+apiVersion: v1     
+metadata:
+  name: hello-newapp #from RELEASE NAME
+spec:
+  selector:
+    app: hello-newapp    
+  type: NodePort  #from values
+  ports:         
+  - name: http   
+    protocol: TCP
+    port: 80 #from Values
+    targetPort: 8080  #from values
+---
+# Source: spring-music/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-newapp
+spec:
+  selector: 
+    matchLabels:
+      app: hello-newapp
+  replicas: 1   #from values
+  template:
+    metadata:
+      labels:
+        app: hello-newapp
+    spec:
+      containers:
+      - name: hello-newapp #from values
+        image: elevy99927/helloworld:2 #from values
+        ports:
+        - containerPort: 8080
+---
+# Source: spring-music/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: hello-newapp
+  labels:
+    app: monitoring
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: hello-newapp
+  endpoints:
+    - port: http
+      interval: 30s
+      path: /metrics
