@@ -58,6 +58,6 @@ spec:
     matchLabels:
       app: hello-newapp
   endpoints:
-    - port: "80"
+    - port: http
       interval: 30s
       path: /metrics
