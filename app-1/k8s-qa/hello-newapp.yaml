@@ -14,6 +14,8 @@ kind: Service
 apiVersion: v1     
 metadata:
   name: hello-newapp #from RELEASE NAME
+  labels:
+    app: hello-newapp
 spec:
   selector:
     app: hello-newapp    
@@ -29,6 +31,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hello-newapp
+  labels:
+    app: hello-newapp
 spec:
   selector: 
     matchLabels:
@@ -41,7 +45,7 @@ spec:
     spec:
       containers:
       - name: hello-newapp #from values
-        image: elevy99927/helloworld:9 #from values
+        image: elevy99927/helloworld:5 #from values
         ports:
         - containerPort: 8000
 ---
