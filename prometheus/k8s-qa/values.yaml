@@ -1373,11 +1373,11 @@ grafana:
   adminPassword: Aa123456
 
   # Use an existing secret for the admin user.
-  admin:
-    ## Name of the secret. Can be templated.
-    existingSecret: ""
-    userKey: admin
-    passwordKey: Aa123456
+  #admin:
+  #  ## Name of the secret. Can be templated.
+  #  existingSecret: ""
+  #  userKey: admin
+  #  passwordKey: Aa123456
 
   rbac:
     ## If true, Grafana PSPs will be created
