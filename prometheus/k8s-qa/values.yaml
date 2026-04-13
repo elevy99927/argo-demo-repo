@@ -1515,6 +1515,45 @@ grafana:
         handleGrafanaManagedAlerts: false
         implementation: prometheus
 
+
+
+###########
+  extraInitContainers:
+    - name: git-sync
+      image: registry.k8s.io/git-sync/git-sync:v4.4.0
+      args:
+        - --repo=https://github.com/elevy99927/argo-demo-repo.git
+        - --branch=application
+        - --root=/dashboards
+        - --one-time
+        - --dest=grafana-dashboards
+      volumeMounts:
+        - name: dashboards
+          mountPath: /dashboards
+
+  extraVolumeMounts:
+    - name: dashboards
+      mountPath: /var/lib/grafana/dashboards/custom
+
+  extraVolumes:
+    - name: dashboards
+      emptyDir: {}
+
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: custom
+          orgId: 1
+          folder: "Custom"
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/custom/grafana-dashboards
+
+
+###########
   extraConfigmapMounts: []
   # - name: certs-configmap
   #   mountPath: /etc/grafana/ssl/
