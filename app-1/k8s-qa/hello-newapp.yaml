@@ -52,7 +52,7 @@ metadata:
   name: hello-newapp
   labels:
     app: monitoring
-    release: prometheus
+    release: prometheus-k8s-qa
 spec:
   selector:
     matchLabels:
