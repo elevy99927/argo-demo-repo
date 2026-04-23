@@ -1,6 +1,3 @@
-# Loki values for k8s-qa
-# Push this to: argo-demo-repo/loki/k8s-qa/values.yaml
-
 loki:
   auth_enabled: false
 
@@ -23,21 +20,28 @@ loki:
           prefix: index_
           period: 24h
 
+deploymentMode: SingleBinary
+
 singleBinary:
   replicas: 1
   persistence:
     size: 10Gi
 
 gateway:
-  enabled: true
+  enabled: false
 
-# Disable components not needed for single binary mode
 backend:
   replicas: 0
 read:
   replicas: 0
 write:
   replicas: 0
+
+lokiCanary:
+  enabled: false
+
+test:
+  enabled: false
 
 chunksCache:
   enabled: false
