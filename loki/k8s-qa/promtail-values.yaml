@@ -1,0 +1,5 @@
+
+config:
+  clients:
+    - url: http://loki-k8s-qa.monitoring.svc:3100/loki/api/v1/push
+
