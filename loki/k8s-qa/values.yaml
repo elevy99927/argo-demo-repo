@@ -26,7 +26,7 @@ singleBinary:
     size: 10Gi
 
 gateway:
-  enabled: false
+  enabled: true
 
 # Disable components not needed for single binary mode
 backend:
