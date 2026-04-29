@@ -139,7 +139,27 @@ server:
       defaultStore: default
       visibilityStore: visibility
       numHistoryShards: 512
-      datastores: {}
+      datastores:
+        default:
+          sql:
+            driver: "mysql8"
+            host: mysql.temporal.svc.cluster.local
+            port: 3306
+            database: temporal
+            user: admin
+            password: Aa123456
+            maxConns: 20
+            maxConnLifetime: "1h"
+        visibility:
+          sql:
+            driver: "mysql8"
+            host: mysql.temporal.svc.cluster.local
+            port: 3306
+            database: temporal_visibility
+            user: admin
+            password: Aa123456
+            maxConns: 20
+            maxConnLifetime: "1h"
     metrics:
       # Additional tags to be added to Prometheus metrics
       tags: {}
@@ -455,6 +475,10 @@ schema:
   resources: {}
   containerSecurityContext: {}
   securityContext: {}
+  setup:
+    enabled: true
+  update:
+    enabled: true
 shims:
   # Enable compatibility with Temporal 1.29 images. Set to false if using Temporal 1.30 or higher.
   dockerize: true
@@ -463,3 +487,17 @@ shims:
 test:
   podAnnotations: {}
   resources: {}
+
+# Disable built-in datastores — using external MySQL
+cassandra:
+  enabled: false
+mysql:
+  enabled: false
+postgresql:
+  enabled: false
+elasticsearch:
+  enabled: false
+prometheus:
+  enabled: false
+grafana:
+  enabled: false

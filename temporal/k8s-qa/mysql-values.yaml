@@ -1,0 +1,27 @@
+## Bitnami MySQL values for Temporal
+## Deployed in namespace: temporal
+
+auth:
+  rootPassword: "Aa123456"
+  username: "admin"
+  password: "Aa123456"
+  ## Temporal requires two databases: temporal and temporal_visibility
+  database: "temporal"
+
+## Create the visibility database via initdb
+initdbScripts:
+  create-visibility-db.sql: |
+    CREATE DATABASE IF NOT EXISTS temporal_visibility;
+    GRANT ALL PRIVILEGES ON temporal_visibility.* TO 'admin'@'%';
+    FLUSH PRIVILEGES;
+
+primary:
+  persistence:
+    enabled: true
+    size: 8Gi
+  resources: {}
+
+secondary:
+  replicaCount: 0
+
+architecture: standalone
