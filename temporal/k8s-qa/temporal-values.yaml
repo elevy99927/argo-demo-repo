@@ -150,6 +150,7 @@ server:
             password: Aa123456
             maxConns: 20
             maxConnLifetime: "1h"
+            manageSchema: true    # <-- add this
         visibility:
           sql:
             driver: "mysql8"
@@ -160,6 +161,7 @@ server:
             password: Aa123456
             maxConns: 20
             maxConnLifetime: "1h"
+            manageSchema: true    # <-- add this
     metrics:
       # Additional tags to be added to Prometheus metrics
       tags: {}
@@ -475,10 +477,10 @@ schema:
   resources: {}
   containerSecurityContext: {}
   securityContext: {}
-  setup:
-    enabled: true
-  update:
-    enabled: true
+  # setup:
+  #   enabled: true
+  # update:
+  #   enabled: true
 shims:
   # Enable compatibility with Temporal 1.29 images. Set to false if using Temporal 1.30 or higher.
   dockerize: true
@@ -487,4 +489,3 @@ shims:
 test:
   podAnnotations: {}
   resources: {}
-
