@@ -1,33 +1,103 @@
-## Bitnami MySQL values for Temporal
-## Deployed in namespace: temporal
-
-## Override image to use official MySQL (Bitnami images no longer public)
-image:
-  registry: docker.io
-  repository: mysql
-  tag: "8.0"
-
-auth:
-  rootPassword: "Aa123456"
-  username: "admin"
-  password: "Aa123456"
-  ## Temporal requires two databases: temporal and temporal_visibility
-  database: "temporal"
-
-## Create the visibility database via initdb
-initdbScripts:
-  create-visibility-db.sql: |
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+  namespace: temporal
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb
+  namespace: temporal
+data:
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS temporal;
     CREATE DATABASE IF NOT EXISTS temporal_visibility;
+    CREATE USER IF NOT EXISTS 'admin'@'%' IDENTIFIED BY 'Aa123456';
+    GRANT ALL PRIVILEGES ON temporal.* TO 'admin'@'%';
     GRANT ALL PRIVILEGES ON temporal_visibility.* TO 'admin'@'%';
     FLUSH PRIVILEGES;
-
-primary:
-  persistence:
-    enabled: true
-    size: 8Gi
-  resources: {}
-
-secondary:
-  replicaCount: 0
-
-architecture: standalone
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: temporal
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "Aa123456"
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+            - name: initdb
+              mountPath: /docker-entrypoint-initdb.d
+          readinessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+                - -uroot
+                - -pAa123456
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+                - -uroot
+                - -pAa123456
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+        - name: initdb
+          configMap:
+            name: mysql-initdb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: temporal
+  labels:
+    app: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+  type: ClusterIP
