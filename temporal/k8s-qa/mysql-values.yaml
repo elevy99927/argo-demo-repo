@@ -1,6 +1,12 @@
 ## Bitnami MySQL values for Temporal
 ## Deployed in namespace: temporal
 
+## Override image to use official MySQL (Bitnami images no longer public)
+image:
+  registry: docker.io
+  repository: mysql
+  tag: "8.0"
+
 auth:
   rootPassword: "Aa123456"
   username: "admin"
