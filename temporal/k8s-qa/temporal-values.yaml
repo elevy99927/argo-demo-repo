@@ -141,29 +141,36 @@ server:
       numHistoryShards: 512
       datastores:
         default:
-          pluginName: "mysql8"
           sql:
-            driver: "mysql8"
-            host: mysql.temporal.svc.cluster.local
-            port: 3306
-            database: temporal
+            pluginName: mysql8
+            driverName: mysql8
+            databaseName: temporal
+            connectAddr: "mysql.temporal.svc.cluster.local:3306"
+            connectProtocol: "tcp"
             user: admin
-            password: Aa123456
+            password: "Aa123456"
             maxConns: 20
+            maxIdleConns: 20
             maxConnLifetime: "1h"
-            manageSchema: true    # <-- add this
+            manageSchema: true
+            connectAttributes:
+              tx_isolation: "READ-COMMITTED"
         visibility:
-          pluginName: "mysql8"
           sql:
-            driver: "mysql8"
-            host: mysql.temporal.svc.cluster.local
-            port: 3306
-            database: temporal_visibility
+            pluginName: mysql8
+            driverName: mysql8
+            databaseName: temporal_visibility
+            connectAddr: "mysql.temporal.svc.cluster.local:3306"
+            connectProtocol: "tcp"
             user: admin
-            password: Aa123456
+            password: "Aa123456"
             maxConns: 20
+            maxIdleConns: 20
             maxConnLifetime: "1h"
-            manageSchema: true    # <-- add this
+            manageSchema: true
+            connectAttributes:
+              tx_isolation: "READ-COMMITTED"
+
     metrics:
       # Additional tags to be added to Prometheus metrics
       tags: {}
