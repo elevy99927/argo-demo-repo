@@ -141,6 +141,7 @@ server:
       numHistoryShards: 512
       datastores:
         default:
+          pluginName: "mysql8"
           sql:
             driver: "mysql8"
             host: mysql.temporal.svc.cluster.local
@@ -152,6 +153,7 @@ server:
             maxConnLifetime: "1h"
             manageSchema: true    # <-- add this
         visibility:
+          pluginName: "mysql8"
           sql:
             driver: "mysql8"
             host: mysql.temporal.svc.cluster.local
