@@ -488,16 +488,3 @@ test:
   podAnnotations: {}
   resources: {}
 
-# Disable built-in datastores — using external MySQL
-cassandra:
-  enabled: false
-mysql:
-  enabled: false
-postgresql:
-  enabled: false
-elasticsearch:
-  enabled: false
-prometheus:
-  enabled: false
-grafana:
-  enabled: false
