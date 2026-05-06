@@ -1,0 +1,24 @@
+baseServerId: 1000
+credentials:
+  root:
+    host: '%'
+    password: Aa123456
+    user: root
+disableLookups: false
+image:
+  pullPolicy: IfNotPresent
+  pullSecrets:
+    enabled: false
+    secretName: null
+initDB:
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS temporal;
+    CREATE DATABASE IF NOT EXISTS temporal_visibility;
+    CREATE USER IF NOT EXISTS 'admin'@'%' IDENTIFIED BY 'Aa123456';
+    GRANT ALL PRIVILEGES ON temporal.* TO 'admin'@'%';
+    GRANT ALL PRIVILEGES ON temporal_visibility.* TO 'admin'@'%';
+    FLUSH PRIVILEGES;
+routerInstances: 1
+serverInstances: 1
+tls:
+  useSelfSigned: true
