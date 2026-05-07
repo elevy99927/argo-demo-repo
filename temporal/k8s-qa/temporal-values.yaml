@@ -147,7 +147,7 @@ server:
             databaseName: temporal
             connectAddr: "mysql-k8s-qa.temporal.svc.cluster.local:6446"
             connectProtocol: "tcp"
-            user: admin
+            user: root
             password: "Aa123456"
             maxConns: 20
             maxIdleConns: 20
@@ -162,7 +162,7 @@ server:
             databaseName: temporal_visibility
             connectAddr: "mysql-k8s-qa.temporal.svc.cluster.local:6446"
             connectProtocol: "tcp"
-            user: admin
+            user: root
             password: "Aa123456"
             maxConns: 20
             maxIdleConns: 20
