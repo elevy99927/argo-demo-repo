@@ -460,13 +460,13 @@ web:
   additionalVolumeMounts: []
   # Adjust Web UI config with environment variables:
   # https://docs.temporal.io/references/web-ui-environment-variables
-  additionalEnv:
-    - name: TEMPORAL_AUTH_ENABLED
-      value: "true"
-    - name: TEMPORAL_AUTH_USERNAME
-      value: "admin"
-    - name: TEMPORAL_AUTH_PASSWORD
-      value: "Aa123456"
+  additionalEnv: []
+    # - name: TEMPORAL_AUTH_ENABLED
+    #   value: "true"
+    # - name: TEMPORAL_AUTH_USERNAME
+    #   value: "admin"
+    # - name: TEMPORAL_AUTH_PASSWORD
+    #   value: "Aa123456"
   additionalEnvSecretName: ""
   additionalEnvConfigMapName: ""
   containerSecurityContext: {}
