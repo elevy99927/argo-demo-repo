@@ -154,7 +154,7 @@ server:
             maxConnLifetime: "1h"
             manageSchema: true
             connectAttributes:
-              tx_isolation: "READ-COMMITTED"
+              transaction_isolation: "READ-COMMITTED"
         visibility:
           sql:
             pluginName: mysql8
@@ -169,7 +169,7 @@ server:
             maxConnLifetime: "1h"
             manageSchema: true
             connectAttributes:
-              tx_isolation: "READ-COMMITTED"
+              transaction_isolation: "READ-COMMITTED"
 
     metrics:
       # Additional tags to be added to Prometheus metrics
