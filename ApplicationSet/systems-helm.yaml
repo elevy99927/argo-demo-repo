@@ -11,7 +11,7 @@ spec:
         repoURL: https://github.com/elevy99927/argo-demo-repo.git
         revision: example-3-helm-values
         files:
-          - path: "systems/*/qa/*/*.values.yaml"
+          - path: "systems/*/qa/*/*-values.yaml"
   # For every matched file:
   #   .path.path     = systems/team-a/dev/frontend-ns
   #   .path.segments = [systems, team-a, dev, frontend-ns]
@@ -43,7 +43,7 @@ spec:
         # cluster folder name == cluster name registered in ArgoCD
         # (argocd cluster add <kube-context> --name dev)
         # single-cluster lab: replace with  server: https://kubernetes.default.svc
-        name: '{{index .path.segments 2}}'
+        server: https://kubernetes.default.svc
         namespace: '{{index .path.segments 3}}'
       syncPolicy:
         automated:
