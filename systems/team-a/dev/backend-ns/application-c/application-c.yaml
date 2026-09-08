@@ -9,9 +9,9 @@ metadata:
   name: application-c-config
 data:
   APP_NAME: application-c
-  TEAM: team-b
-  CLUSTER: qa
-  NAMESPACE: payments-ns
+  TEAM: team-a
+  CLUSTER: dev
+  NAMESPACE: backend-ns
 ---
 apiVersion: v1
 kind: Secret
@@ -65,7 +65,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: application-c.payments-ns.team-b.qa.local
+  - host: application-c.backend-ns.team-a.dev.local
     http:
       paths:
       - path: /

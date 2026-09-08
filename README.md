@@ -18,21 +18,24 @@ systems/<team>/<env>/<ns>/<app>/<app>.yaml
 
 systems/
 ├── team-a/
-│   ├── dev/frontend-ns/  application-a/  application-b/
-│   ├── qa/frontend-ns/   application-a/  application-b/
-│   └── prd/frontend-ns/  application-a/  application-b/
+│   ├── dev/  frontend-ns/{application-a,application-b}/  backend-ns/application-c/
+│   ├── qa/   frontend-ns/{application-a,application-b}/  backend-ns/application-c/
+│   └── prd/  frontend-ns/{application-a,application-b}/  backend-ns/application-c/
 └── team-b/
-    ├── dev/payments-ns/  application-c/  application-d/
-    ├── qa/payments-ns/   application-c/  application-d/
-    └── prd/payments-ns/  application-c/  application-d/
+    ├── dev/  payments-ns/{application-d,application-e}/
+    ├── qa/   payments-ns/{application-d,application-e}/
+    └── prd/  payments-ns/{application-d,application-e}/
 ```
+
+Same teams, namespaces, and apps as Example 3.
 
 | Team   | Namespace   | App           | Image                       |
 |--------|-------------|---------------|-----------------------------|
 | team-a | frontend-ns | application-a | `elevy99927/color:blue`     |
 | team-a | frontend-ns | application-b | `elevy99927/color:yellow`   |
-| team-b | payments-ns | application-c | `elevy99927/color:red`      |
+| team-a | backend-ns  | application-c | `elevy99927/color:red`      |
 | team-b | payments-ns | application-d | `elevy99927/color:blue`     |
+| team-b | payments-ns | application-e | `elevy99927/color:green`    |
 
 Each `<app>.yaml` is a full app in one file: ServiceAccount, ConfigMap, Secret,
 Deployment, Service, and Ingress. The Deployment runs as its ServiceAccount and loads the
