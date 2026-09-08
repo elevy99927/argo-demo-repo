@@ -10,8 +10,7 @@ metadata:
 data:
   APP_NAME: application-c
   TEAM: team-a
-  CLUSTER: dev
-  NAMESPACE: backend-ns
+  ENV: dev
 ---
 apiVersion: v1
 kind: Secret
@@ -65,7 +64,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: application-c.backend-ns.team-a.dev.local
+  - host: application-c.team-a.dev.local
     http:
       paths:
       - path: /

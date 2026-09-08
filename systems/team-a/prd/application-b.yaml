@@ -10,8 +10,7 @@ metadata:
 data:
   APP_NAME: application-b
   TEAM: team-a
-  CLUSTER: qa
-  NAMESPACE: frontend-ns
+  ENV: prd
 ---
 apiVersion: v1
 kind: Secret
@@ -65,7 +64,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: application-b.frontend-ns.team-a.qa.local
+  - host: application-b.team-a.prd.local
     http:
       paths:
       - path: /

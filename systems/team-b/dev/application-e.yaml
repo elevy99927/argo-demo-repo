@@ -1,22 +1,21 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: application-c
+  name: application-e
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: application-c-config
+  name: application-e-config
 data:
-  APP_NAME: application-c
-  TEAM: team-a
-  CLUSTER: prd
-  NAMESPACE: backend-ns
+  APP_NAME: application-e
+  TEAM: team-b
+  ENV: dev
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: application-c-secret
+  name: application-e-secret
 type: Opaque
 stringData:
   API_KEY: changeme
@@ -24,36 +23,36 @@ stringData:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: application-c
+  name: application-e
 spec:
   selector:
     matchLabels:
-      app: application-c
+      app: application-e
   replicas: 1
   template:
     metadata:
       labels:
-        app: application-c
+        app: application-e
     spec:
-      serviceAccountName: application-c
+      serviceAccountName: application-e
       containers:
       - name: color
-        image: elevy99927/color:red
+        image: elevy99927/color:green
         ports:
         - containerPort: 80
         envFrom:
         - configMapRef:
-            name: application-c-config
+            name: application-e-config
         - secretRef:
-            name: application-c-secret
+            name: application-e-secret
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: application-c
+  name: application-e
 spec:
   selector:
-    app: application-c
+    app: application-e
   ports:
   - port: 80
     targetPort: 80
@@ -61,17 +60,17 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: application-c
+  name: application-e
 spec:
   ingressClassName: nginx
   rules:
-  - host: application-c.backend-ns.team-a.prd.local
+  - host: application-e.team-b.dev.local
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: application-c
+            name: application-e
             port:
               number: 80

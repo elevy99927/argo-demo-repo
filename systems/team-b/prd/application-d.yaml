@@ -1,22 +1,21 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: application-e
+  name: application-d
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: application-e-config
+  name: application-d-config
 data:
-  APP_NAME: application-e
+  APP_NAME: application-d
   TEAM: team-b
-  CLUSTER: dev
-  NAMESPACE: payments-ns
+  ENV: prd
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: application-e-secret
+  name: application-d-secret
 type: Opaque
 stringData:
   API_KEY: changeme
@@ -24,36 +23,36 @@ stringData:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: application-e
+  name: application-d
 spec:
   selector:
     matchLabels:
-      app: application-e
+      app: application-d
   replicas: 1
   template:
     metadata:
       labels:
-        app: application-e
+        app: application-d
     spec:
-      serviceAccountName: application-e
+      serviceAccountName: application-d
       containers:
       - name: color
-        image: elevy99927/color:green
+        image: elevy99927/color:blue
         ports:
         - containerPort: 80
         envFrom:
         - configMapRef:
-            name: application-e-config
+            name: application-d-config
         - secretRef:
-            name: application-e-secret
+            name: application-d-secret
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: application-e
+  name: application-d
 spec:
   selector:
-    app: application-e
+    app: application-d
   ports:
   - port: 80
     targetPort: 80
@@ -61,17 +60,17 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: application-e
+  name: application-d
 spec:
   ingressClassName: nginx
   rules:
-  - host: application-e.payments-ns.team-b.dev.local
+  - host: application-d.team-b.prd.local
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: application-e
+            name: application-d
             port:
               number: 80
