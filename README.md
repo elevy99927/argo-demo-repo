@@ -35,42 +35,15 @@ Each `application-*.yaml` is a full app in one file: ServiceAccount, ConfigMap, 
 Deployment, Service, and Ingress. The Deployment runs as its ServiceAccount and loads the
 ConfigMap and Secret via `envFrom`. The Ingress host is `<app>.<team>.<cluster>.local`.
 
-Each folder becomes one Argo CD Application named `<team>-<cluster>`.
+Each folder becomes one Argo CD Application named `<team>-<cluster>`, deployed into a
+namespace of the same name.
 
 ### ApplicationSet
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
-metadata:
-  name: systems
-  namespace: argocd
-spec:
-  goTemplate: true
-  generators:
-  - git:
-      repoURL: https://github.com/elevy99927/argo-demo-repo.git
-      revision: example-2-dynamic-generator
-      directories:
-      - path: 'systems/*/*'
-  template:
-    metadata:
-      name: '{{ index .path.segments 1 }}-{{ .path.basename }}'
-    spec:
-      project: default
-      source:
-        repoURL: https://github.com/elevy99927/argo-demo-repo.git
-        targetRevision: example-2-dynamic-generator
-        path: '{{ .path.path }}'
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: '{{ index .path.segments 1 }}'
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-        - CreateNamespace=true
+The ApplicationSet lives in [ApplicationSet/systems-dynamic.yaml](ApplicationSet/systems-dynamic.yaml).
+
+```bash
+kubectl apply -f ApplicationSet/systems-dynamic.yaml
 ```
 
 `.path.segments` for `systems/team-a/k8s-dev` is `[systems, team-a, k8s-dev]`,

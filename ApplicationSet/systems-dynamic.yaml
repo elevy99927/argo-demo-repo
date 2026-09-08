@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: systems-dynamic
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/elevy99927/argo-demo-repo.git
+        revision: example-2-dynamic-generator
+        directories:
+          - path: systems/*/*
+  template:
+    metadata:
+      # .path.segments = [systems, team-a, k8s-dev]
+      name: '{{index .path.segments 1}}-{{.path.basename}}'   # team-a-k8s-dev
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/elevy99927/argo-demo-repo.git
+        targetRevision: example-2-dynamic-generator
+        path: '{{.path.path}}'            # systems/team-a/k8s-dev
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{index .path.segments 1}}-{{.path.basename}}'   # team-a-k8s-dev
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
