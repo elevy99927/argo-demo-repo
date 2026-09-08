@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: infra-helm
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/elevy99927/argo-demo-repo.git
+        revision: example-3-helm-values
+        files:
+          - path: "systems/devops/qa/*/*.yaml"
+  # For every matched file, e.g. systems/devops/qa/ingress-nginx/ingress.yaml:
+  #   .path.path     = systems/devops/qa/ingress-nginx
+  #   .path.segments = [systems, devops, qa, ingress-nginx]
+  #   .path.filename = ingress.yaml
+  template:
+    metadata:
+      # devops-qa-ingress-nginx-ingress
+      name: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}-{{.path.filename | trimSuffix ".yaml"}}'
+      labels:
+        team: '{{index .path.segments 1}}'
+        cluster: '{{index .path.segments 2}}'
+        app: '{{.path.filename | trimSuffix ".yaml"}}'
+    spec:
+      project: default
+      sources:
+        # 1. Chart from the Helm repo
+        - repoURL: https://kubernetes.github.io/ingress-nginx
+          chart: ingress-nginx
+          targetRevision: 4.15.1
+          helm:
+            # release name = namespace folder, so resources are named ingress-nginx-controller etc.
+            releaseName: '{{index .path.segments 3}}'
+            valueFiles:
+              - $values/{{.path.path}}/{{.path.filename}}
+        # 2. Values from the GitOps repo
+        - repoURL: https://github.com/elevy99927/argo-demo-repo.git
+          targetRevision: example-3-helm-values
+          ref: values
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{index .path.segments 3}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
