@@ -1,3 +1,0 @@
-replicaCount: 3
-ui:
-  message: "application-d | team-b | prd | payments-ns"

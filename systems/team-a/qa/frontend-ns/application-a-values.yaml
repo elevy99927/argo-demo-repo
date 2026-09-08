@@ -1,3 +1,0 @@
-replicaCount: 2
-ui:
-  message: "application-a | team-a | qa | frontend-ns"

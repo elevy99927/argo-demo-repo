@@ -1,0 +1,3 @@
+replicaCount: 3
+ui:
+  message: "app-c | team-a | prd | backend-ns"

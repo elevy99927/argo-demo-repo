@@ -1,0 +1,3 @@
+replicaCount: 2
+ui:
+  message: "app-d | team-b | qa | payments-ns"
