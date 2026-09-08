@@ -10,20 +10,21 @@ Branch: `example-2-dynamic-generator`
 
 Folders are discovered from Git, so adding a team, environment, namespace, or app is just
 adding a directory. The ApplicationSet uses a **git directory generator** on
-`systems/*/*/*/*` and reads team, environment, namespace, and app name from the path.
+`systems/*/qa/*/*` and reads team, environment, namespace, and app name from the path.
+The environment is pinned per ApplicationSet, so one ApplicationSet serves one environment.
 
 ```
 systems/<team>/<env>/<ns>/<app>/<app>.yaml
 
 systems/
 ├── team-a/
-│   ├── k8s-dev/frontend-ns/  application-a/  application-b/
-│   ├── k8s-qa/frontend-ns/   application-a/  application-b/
-│   └── k8s-prd/frontend-ns/  application-a/  application-b/
+│   ├── dev/frontend-ns/  application-a/  application-b/
+│   ├── qa/frontend-ns/   application-a/  application-b/
+│   └── prd/frontend-ns/  application-a/  application-b/
 └── team-b/
-    ├── k8s-dev/payments-ns/  application-c/  application-d/
-    ├── k8s-qa/payments-ns/   application-c/  application-d/
-    └── k8s-prd/payments-ns/  application-c/  application-d/
+    ├── dev/payments-ns/  application-c/  application-d/
+    ├── qa/payments-ns/   application-c/  application-d/
+    └── prd/payments-ns/  application-c/  application-d/
 ```
 
 | Team   | Namespace   | App           | Image                       |
@@ -38,7 +39,7 @@ Deployment, Service, and Ingress. The Deployment runs as its ServiceAccount and 
 ConfigMap and Secret via `envFrom`. The Ingress host is `<app>.<ns>.<team>.<env>.local`.
 
 Each app folder becomes one Argo CD Application named `<team>-<env>-<ns>-<app>`
-(for example `team-a-k8s-dev-frontend-ns-application-a`), deployed into `<ns>`.
+(for example `team-a-qa-frontend-ns-application-a`), deployed into `<ns>`.
 
 ### ApplicationSet
 
@@ -48,8 +49,8 @@ The ApplicationSet lives in [ApplicationSet/systems-dynamic.yaml](ApplicationSet
 kubectl apply -f ApplicationSet/systems-dynamic.yaml
 ```
 
-`.path.segments` for `systems/team-a/k8s-dev/frontend-ns/application-a` is
-`[systems, team-a, k8s-dev, frontend-ns, application-a]`, so index 1 is the team,
+`.path.segments` for `systems/team-a/qa/frontend-ns/application-a` is
+`[systems, team-a, qa, frontend-ns, application-a]`, so index 1 is the team,
 index 2 the environment, index 3 the namespace, and `.path.basename` is the app.
 
 ---
