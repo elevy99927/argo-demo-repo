@@ -11,20 +11,20 @@ spec:
         repoURL: https://github.com/elevy99927/argo-demo-repo.git
         revision: example-2-dynamic-generator
         directories:
-          - path: systems/*/*
+          - path: systems/*/*/*/*        # systems/<team>/<env>/<ns>/<app>
   template:
     metadata:
-      # .path.segments = [systems, team-a, k8s-dev]
-      name: '{{index .path.segments 1}}-{{.path.basename}}'   # team-a-k8s-dev
+      # .path.segments = [systems, team-a, k8s-dev, frontend-ns, application-a]
+      name: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}-{{.path.basename}}'   # team-a-k8s-dev-frontend-ns-application-a
     spec:
       project: default
       source:
         repoURL: https://github.com/elevy99927/argo-demo-repo.git
         targetRevision: example-2-dynamic-generator
-        path: '{{.path.path}}'            # systems/team-a/k8s-dev
+        path: '{{.path.path}}'            # systems/team-a/k8s-dev/frontend-ns/application-a
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{index .path.segments 1}}-{{.path.basename}}'   # team-a-k8s-dev
+        namespace: '{{index .path.segments 3}}'   # frontend-ns
       syncPolicy:
         automated:
           prune: true

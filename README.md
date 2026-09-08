@@ -8,35 +8,37 @@
 
 Branch: `example-2-dynamic-generator`
 
-Folders are discovered from Git, so adding a team or cluster is just adding a directory.
-The ApplicationSet uses a **git directory generator** on `systems/*/*` and reads
-the team and cluster names from the path.
+Folders are discovered from Git, so adding a team, environment, namespace, or app is just
+adding a directory. The ApplicationSet uses a **git directory generator** on
+`systems/*/*/*/*` and reads team, environment, namespace, and app name from the path.
 
 ```
+systems/<team>/<env>/<ns>/<app>/<app>.yaml
+
 systems/
 ├── team-a/
-│   ├── k8s-dev/  application-a.yaml  application-b.yaml
-│   ├── k8s-qa/   application-a.yaml  application-b.yaml
-│   └── k8s-prd/  application-a.yaml  application-b.yaml
+│   ├── k8s-dev/frontend-ns/  application-a/  application-b/
+│   ├── k8s-qa/frontend-ns/   application-a/  application-b/
+│   └── k8s-prd/frontend-ns/  application-a/  application-b/
 └── team-b/
-    ├── k8s-dev/  application-c.yaml  application-d.yaml
-    ├── k8s-qa/   application-c.yaml  application-d.yaml
-    └── k8s-prd/  application-c.yaml  application-d.yaml
+    ├── k8s-dev/payments-ns/  application-c/  application-d/
+    ├── k8s-qa/payments-ns/   application-c/  application-d/
+    └── k8s-prd/payments-ns/  application-c/  application-d/
 ```
 
-| Team   | App           | Image                       |
-|--------|---------------|-----------------------------|
-| team-a | application-a | `elevy99927/color:blue`     |
-| team-a | application-b | `elevy99927/color:yellow`   |
-| team-b | application-c | `elevy99927/color:red`      |
-| team-b | application-d | `elevy99927/color:blue`     |
+| Team   | Namespace   | App           | Image                       |
+|--------|-------------|---------------|-----------------------------|
+| team-a | frontend-ns | application-a | `elevy99927/color:blue`     |
+| team-a | frontend-ns | application-b | `elevy99927/color:yellow`   |
+| team-b | payments-ns | application-c | `elevy99927/color:red`      |
+| team-b | payments-ns | application-d | `elevy99927/color:blue`     |
 
-Each `application-*.yaml` is a full app in one file: ServiceAccount, ConfigMap, Secret,
+Each `<app>.yaml` is a full app in one file: ServiceAccount, ConfigMap, Secret,
 Deployment, Service, and Ingress. The Deployment runs as its ServiceAccount and loads the
-ConfigMap and Secret via `envFrom`. The Ingress host is `<app>.<team>.<cluster>.local`.
+ConfigMap and Secret via `envFrom`. The Ingress host is `<app>.<ns>.<team>.<env>.local`.
 
-Each folder becomes one Argo CD Application named `<team>-<cluster>`, deployed into a
-namespace of the same name.
+Each app folder becomes one Argo CD Application named `<team>-<env>-<ns>-<app>`
+(for example `team-a-k8s-dev-frontend-ns-application-a`), deployed into `<ns>`.
 
 ### ApplicationSet
 
@@ -46,8 +48,9 @@ The ApplicationSet lives in [ApplicationSet/systems-dynamic.yaml](ApplicationSet
 kubectl apply -f ApplicationSet/systems-dynamic.yaml
 ```
 
-`.path.segments` for `systems/team-a/k8s-dev` is `[systems, team-a, k8s-dev]`,
-so index 1 is the team and `.path.basename` is the cluster.
+`.path.segments` for `systems/team-a/k8s-dev/frontend-ns/application-a` is
+`[systems, team-a, k8s-dev, frontend-ns, application-a]`, so index 1 is the team,
+index 2 the environment, index 3 the namespace, and `.path.basename` is the app.
 
 ---
 ## Contact

@@ -11,6 +11,7 @@ data:
   APP_NAME: application-a
   TEAM: team-a
   CLUSTER: k8s-dev
+  NAMESPACE: frontend-ns
 ---
 apiVersion: v1
 kind: Secret
@@ -64,7 +65,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: application-a.team-a.k8s-dev.local
+  - host: application-a.frontend-ns.team-a.k8s-dev.local
     http:
       paths:
       - path: /
