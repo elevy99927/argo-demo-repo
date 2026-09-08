@@ -31,6 +31,10 @@ systems/
 | team-b | application-c | `elevy99927/color:red`      |
 | team-b | application-d | `elevy99927/color:blue`     |
 
+Each `application-*.yaml` is a full app in one file: ServiceAccount, ConfigMap, Secret,
+Deployment, Service, and Ingress. The Deployment runs as its ServiceAccount and loads the
+ConfigMap and Secret via `envFrom`. The Ingress host is `<app>.<team>.<cluster>.local`.
+
 Each folder becomes one Argo CD Application named `<team>-<cluster>`.
 
 ### ApplicationSet
