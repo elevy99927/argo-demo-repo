@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: systems-helm
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/elevy99927/argo-demo-repo.git
+        revision: example-3-helm-values
+        files:
+          - path: "systems/*/qa/*/*.values.yaml"
+  # For every matched file:
+  #   .path.path     = systems/team-a/dev/frontend-ns
+  #   .path.segments = [systems, team-a, dev, frontend-ns]
+  #   .path.filename = app-a-values.yaml
+  template:
+    metadata:
+      # team-a-dev-frontend-ns-app-a
+      name: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}-{{.path.filename | trimSuffix "-values.yaml"}}'
+      labels:
+        team: '{{index .path.segments 1}}'
+        cluster: '{{index .path.segments 2}}'
+        app: '{{.path.filename | trimSuffix "-values.yaml"}}'
+    spec:
+      project: default
+      sources:
+        # 1. Chart from the Helm repo
+        - repoURL: https://stefanprodan.github.io/podinfo
+          chart: podinfo
+          targetRevision: 6.5.0
+          helm:
+            releaseName: '{{.path.filename | trimSuffix "-values.yaml"}}'
+            valueFiles:
+              - $values/{{.path.path}}/{{.path.filename}}
+        # 2. Values from the GitOps repo
+        - repoURL: https://github.com/elevy99927/argo-demo-repo.git
+          targetRevision: example-3-helm-values
+          ref: values
+      destination:
+        # cluster folder name == cluster name registered in ArgoCD
+        # (argocd cluster add <kube-context> --name dev)
+        # single-cluster lab: replace with  server: https://kubernetes.default.svc
+        name: '{{index .path.segments 2}}'
+        namespace: '{{index .path.segments 3}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
