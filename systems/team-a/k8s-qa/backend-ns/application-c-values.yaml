@@ -1,3 +1,0 @@
-replicaCount: 2
-ui:
-  message: "application-c | team-a | k8s-qa | backend-ns"

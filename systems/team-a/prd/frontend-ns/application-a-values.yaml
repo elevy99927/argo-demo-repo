@@ -1,0 +1,3 @@
+replicaCount: 3
+ui:
+  message: "application-a | team-a | prd | frontend-ns"

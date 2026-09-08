@@ -1,0 +1,3 @@
+replicaCount: 2
+ui:
+  message: "application-c | team-a | qa | backend-ns"

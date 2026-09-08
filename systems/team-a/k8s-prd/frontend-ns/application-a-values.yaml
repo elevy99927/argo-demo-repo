@@ -1,3 +1,0 @@
-replicaCount: 3
-ui:
-  message: "application-a | team-a | k8s-prd | frontend-ns"

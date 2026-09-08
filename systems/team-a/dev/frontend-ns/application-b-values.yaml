@@ -1,0 +1,3 @@
+replicaCount: 1
+ui:
+  message: "application-b | team-a | dev | frontend-ns"
