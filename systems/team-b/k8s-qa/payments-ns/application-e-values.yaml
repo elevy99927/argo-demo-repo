@@ -1,0 +1,3 @@
+replicaCount: 2
+ui:
+  message: "application-e | team-b | k8s-qa | payments-ns"
