@@ -1,4 +1,4 @@
-# argo-demo-repo
+# GitOps Demo repo
 ## This is a Demo repository for ARGOCD tutorial.
 ## for the full content of this project, please refer to:
 ## [https://github.com/elevy99927/Jenkins-k8s/tree/main/Part4-CICD/04-ArgoCD](https://github.com/elevy99927/Jenkins-k8s/tree/main/Part4-CICD/04-ArgoCD)
