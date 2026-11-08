@@ -1,0 +1,4 @@
+replicaCount: 1
+ui:
+  color: "#ef6c00"
+  message: "storefront | digital-ui | dev | web"

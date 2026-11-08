@@ -1,0 +1,4 @@
+replicaCount: 1
+ui:
+  color: "#1565c0"
+  message: "ledger | finance | dev | finance"

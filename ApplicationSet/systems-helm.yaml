@@ -9,16 +9,16 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/elevy99927/argo-demo-repo.git
-        revision: example-3-helm-values
+        revision: example-4-real-live-example
         files:
           - path: "systems/*/qa/*/*-values.yaml"
   # For every matched file:
-  #   .path.path     = systems/team-a/dev/frontend-ns
-  #   .path.segments = [systems, team-a, dev, frontend-ns]
-  #   .path.filename = app-a-values.yaml
+  #   .path.path     = systems/hr/qa/hr
+  #   .path.segments = [systems, hr, qa, hr]
+  #   .path.filename = payroll-values.yaml
   template:
     metadata:
-      # team-a-dev-frontend-ns-app-a
+      # hr-qa-hr-payroll
       name: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}-{{.path.filename | trimSuffix "-values.yaml"}}'
       labels:
         team: '{{index .path.segments 1}}'
@@ -37,7 +37,7 @@ spec:
               - $values/{{.path.path}}/{{.path.filename}}
         # 2. Values from the GitOps repo
         - repoURL: https://github.com/elevy99927/argo-demo-repo.git
-          targetRevision: example-3-helm-values
+          targetRevision: example-4-real-live-example
           ref: values
       destination:
         # cluster folder name == cluster name registered in ArgoCD

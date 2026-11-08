@@ -1,0 +1,4 @@
+replicaCount: 1
+ui:
+  color: "#c62828"
+  message: "payments-api | digital-backend | dev | payments"

@@ -1,3 +1,0 @@
-replicaCount: 1
-ui:
-  message: "app-b | team-a | dev | frontend-ns"

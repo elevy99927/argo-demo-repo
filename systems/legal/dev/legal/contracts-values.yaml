@@ -1,0 +1,4 @@
+replicaCount: 1
+ui:
+  color: "#6a1b9a"
+  message: "contracts | legal | dev | legal"

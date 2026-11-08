@@ -1,0 +1,4 @@
+replicaCount: 2
+ui:
+  color: "#c62828"
+  message: "orders-api | digital-backend | qa | api"

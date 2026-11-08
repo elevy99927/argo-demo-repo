@@ -1,0 +1,4 @@
+replicaCount: 3
+ui:
+  color: "#2e7d32"
+  message: "payroll | hr | prd | hr"

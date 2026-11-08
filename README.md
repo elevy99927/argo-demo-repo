@@ -4,59 +4,66 @@
 ## [https://github.com/elevy99927/Jenkins-k8s/tree/main/Part4-CICD/04-ArgoCD](https://github.com/elevy99927/Jenkins-k8s/tree/main/Part4-CICD/04-ArgoCD)
 
 ---
-## Example 3: Git Files Generator + Helm Multi-Source ApplicationSet
+## Example 4: Real-Life Organisation (Git Files Generator + Helm Multi-Source)
 
-Branch: `example-3-helm-values`
+Branch: `example-4-real-live-example`
 
-This branch holds **only Helm values files**, no manifests. One Helm chart is deployed many
-times, and every values file in Git becomes one Application. The ApplicationSet uses a
-**git files generator** matching `systems/**/*-values.yaml` and a **multi-source** Application:
-source 1 is the chart, source 2 is this repo, referenced as `$values`.
+Same mechanics as Example 3: one Helm chart, one values file per app, and every values file in Git
+becomes one Application. The difference is that the folders follow a real organisation:
+five business units, each owning its own apps and namespaces.
+
+| Business unit | Namespace(s) | Apps |
+|---------------|--------------|------|
+| `hr` | `hr` | `payroll`, `recruiting` |
+| `finance` | `finance` | `invoicing`, `ledger` |
+| `legal` | `legal` | `contracts` |
+| `digital-ui` | `web` | `storefront`, `customer-portal` |
+| `digital-backend` | `api`, `payments` | `orders-api`, `customers-api`, `payments-api` |
 
 ```
-systems/<team>/<cluster>/<namespace>/<app>-values.yaml
+systems/<business-unit>/<cluster>/<namespace>/<app>-values.yaml
 
 └── systems
-    ├── team-a
-    │   ├── dev
-    │   │   ├── frontend-ns
-    │   │   │   ├── app-a-values.yaml
-    │   │   │   └── app-b-values.yaml
-    │   │   └── backend-ns
-    │   │       └── app-c-values.yaml
-    │   ├── qa
-    │   │   ├── frontend-ns
-    │   │   │   ├── app-a-values.yaml
-    │   │   │   └── app-b-values.yaml
-    │   │   └── backend-ns
-    │   │       └── app-c-values.yaml
-    │   └── prd
-    │       ├── frontend-ns
-    │       │   ├── app-a-values.yaml
-    │       │   └── app-b-values.yaml
-    │       └── backend-ns
-    │           └── app-c-values.yaml
-    └── team-b
-        ├── dev
-        │   └── payments-ns
-        │       ├── app-d-values.yaml
-        │       └── app-e-values.yaml
-        ├── qa
-        │   └── payments-ns
-        │       ├── app-d-values.yaml
-        │       └── app-e-values.yaml
-        └── prd
-            └── payments-ns
-                ├── app-d-values.yaml
-                └── app-e-values.yaml
+    ├── hr
+    │   └── dev | qa | prd
+    │       └── hr
+    │           ├── payroll-values.yaml
+    │           └── recruiting-values.yaml
+    ├── finance
+    │   └── dev | qa | prd
+    │       └── finance
+    │           ├── invoicing-values.yaml
+    │           └── ledger-values.yaml
+    ├── legal
+    │   └── dev | qa | prd
+    │       └── legal
+    │           └── contracts-values.yaml
+    ├── digital-ui
+    │   └── dev | qa | prd
+    │       └── web
+    │           ├── storefront-values.yaml
+    │           └── customer-portal-values.yaml
+    ├── digital-backend
+    │   └── dev | qa | prd
+    │       ├── api
+    │       │   ├── orders-api-values.yaml
+    │       │   └── customers-api-values.yaml
+    │       └── payments
+    │           └── payments-api-values.yaml
+    └── devops
+        └── dev | qa | prd
+            └── ingress-nginx
+                └── ingress.yaml
 ```
 
-Each values file is three lines:
+10 apps × 3 clusters = 30 Applications from one ApplicationSet. Each values file is four lines;
+`ui.color` is the business unit's color, so each podinfo UI shows which unit it belongs to:
 
 ```yaml
 replicaCount: 1
 ui:
-  message: "app-a | team-a | dev | frontend-ns"
+  color: "#2e7d32"
+  message: "payroll | hr | dev | hr"
 ```
 
 | Cluster | replicaCount |
@@ -65,66 +72,18 @@ ui:
 | qa  | 2 |
 | prd | 3 |
 
-### ApplicationSet
+### ApplicationSets
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
-metadata:
-  name: systems-helm
-  namespace: argocd
-spec:
-  goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
-  generators:
-    - git:
-        repoURL: https://github.com/elevy99927/argo-demo-repo.git
-        revision: example-3-helm-values
-        files:
-          - path: "systems/*/*/*/*-values.yaml"
-  # For every matched file:
-  #   .path.path     = systems/team-a/dev/frontend-ns
-  #   .path.segments = [systems, team-a, dev, frontend-ns]
-  #   .path.filename = app-a-values.yaml
-  template:
-    metadata:
-      # team-a-dev-frontend-ns-app-a
-      name: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}-{{.path.filename | trimSuffix "-values.yaml"}}'
-      labels:
-        team: '{{index .path.segments 1}}'
-        cluster: '{{index .path.segments 2}}'
-        app: '{{.path.filename | trimSuffix "-values.yaml"}}'
-    spec:
-      project: default
-      sources:
-        # 1. Chart from the Helm repo
-        - repoURL: https://stefanprodan.github.io/podinfo
-          chart: podinfo
-          targetRevision: 6.5.0
-          helm:
-            releaseName: '{{.path.filename | trimSuffix "-values.yaml"}}'
-            valueFiles:
-              - $values/{{.path.path}}/{{.path.filename}}
-        # 2. Values from the GitOps repo
-        - repoURL: https://github.com/elevy99927/argo-demo-repo.git
-          targetRevision: example-3-helm-values
-          ref: values
-      destination:
-        # cluster folder name == cluster name registered in ArgoCD
-        # (argocd cluster add <kube-context> --name dev)
-        # single-cluster lab: replace with  server: https://kubernetes.default.svc
-        name: '{{index .path.segments 2}}'
-        namespace: '{{index .path.segments 3}}'
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true```
+- [ApplicationSet/systems-helm.yaml](ApplicationSet/systems-helm.yaml): business-unit apps (podinfo chart).
+  Generates `hr-qa-hr-payroll`, `digital-backend-qa-payments-payments-api`, ...
+- [ApplicationSet/infra-helm.yaml](ApplicationSet/infra-helm.yaml): DevOps infra (ingress-nginx chart).
 
-Replace the `<helm-chart-repo>` / `<chart-name>` / `<chart-version>` placeholders with the chart
-from the main tutorial repo. The namespace is the folder holding the values file, and the file's
-own keys (`replicaCount`, `ui.message`) are also exposed to the template if you need them.
+Both match only `qa` (`systems/*/qa/*/*-values.yaml`) because the lab runs on one kind cluster.
+For all clusters, change the path to `systems/*/*/*/*-values.yaml` and the destination to
+`name: '{{index .path.segments 2}}'` (cluster folder name == cluster name registered in ArgoCD).
+
+Onboarding a new app is one file: add `systems/<unit>/<cluster>/<namespace>/<app>-values.yaml`,
+push, and ArgoCD creates the Application. Deleting the file removes it.
 
 ---
 ## Contact

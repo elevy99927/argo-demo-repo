@@ -9,7 +9,7 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/elevy99927/argo-demo-repo.git
-        revision: example-3-helm-values
+        revision: example-4-real-live-example
         files:
           - path: "systems/devops/qa/*/*.yaml"
   # For every matched file, e.g. systems/devops/qa/ingress-nginx/ingress.yaml:
@@ -38,7 +38,7 @@ spec:
               - $values/{{.path.path}}/{{.path.filename}}
         # 2. Values from the GitOps repo
         - repoURL: https://github.com/elevy99927/argo-demo-repo.git
-          targetRevision: example-3-helm-values
+          targetRevision: example-4-real-live-example
           ref: values
       destination:
         server: https://kubernetes.default.svc

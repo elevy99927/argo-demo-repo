@@ -1,0 +1,4 @@
+replicaCount: 3
+ui:
+  color: "#6a1b9a"
+  message: "contracts | legal | prd | legal"

@@ -1,0 +1,4 @@
+replicaCount: 2
+ui:
+  color: "#1565c0"
+  message: "invoicing | finance | qa | finance"

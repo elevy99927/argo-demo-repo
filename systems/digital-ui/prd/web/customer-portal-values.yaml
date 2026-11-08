@@ -1,0 +1,4 @@
+replicaCount: 3
+ui:
+  color: "#ef6c00"
+  message: "customer-portal | digital-ui | prd | web"
